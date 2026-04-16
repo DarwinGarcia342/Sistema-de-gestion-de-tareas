@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Tareas Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <main class="task-container">
+        <header class="header">
+            <h1>Mis Tareas</h1>
+            <p>Organiza tu día de forma eficiente</p>
+        </header>
+
+        <section class="input-section">
+            <input 
+                type="text" 
+                id="taskInput" 
+                placeholder="¿Qué tienes pendiente hoy?"
+                autocomplete="off"
+            >
+            <button id="addTaskButton" title="Agregar nueva tarea">+</button>
+        </section>
+
+        <section class="task-stats">
+            <div class="stat-box">
+                <strong id="totalTasks">0</strong>
+                <span>Total</span>
+            </div>
+            <div class="stat-box">
+                <strong id="completedTasks">0</strong>
+                <span>Completas</span>
+            </div>
+            <div class="stat-box">
+                <strong id="pendingTasks">0</strong>
+                <span>Pendientes</span>
+            </div>
+        </section>
+
+        <nav class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Todas</button>
+            <button class="filter-btn" data-filter="pending">Pendientes</button>
+            <button class="filter-btn" data-filter="completed">Completadas</button>
+        </nav>
+
+        <section class="list-wrapper">
+            <ul id="taskList" class="task-list"></ul>
+            
+            <div id="emptyState" class="empty-state">
+                <div class="icon">📝</div>
+                <p>No hay tareas pendientes. ¡Empieza creando una!</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
