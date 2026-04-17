@@ -1,18 +1,21 @@
 const DOM = {
     taskInput: document.getElementById('taskInput'),
+    taskAssignee: document.getElementById('taskAssignee'),
+    taskCategory: document.getElementById('taskCategory'),
     addTaskButton: document.getElementById('addTaskButton'),
     taskList: document.getElementById('taskList'),
     emptyState: document.getElementById('emptyState'),
     totalTasksSpan: document.getElementById('totalTasks'),
     completedTasksSpan: document.getElementById('completedTasks'),
-    pendingTasksSpan: document.getElementById('pendingTasks'),
+    workTasksSpan: document.getElementById('workTasks'),
+    studyTasksSpan: document.getElementById('studyTasks'),
+    freelanceTasksSpan: document.getElementById('freelanceTasks'),
     filterButtons: document.querySelectorAll('.filter-btn')
 };
 
 let tasks = [];
 let currentFilter = 'all';
-
-const STORAGE_KEY = 'tareas_guardadas';
+const STORAGE_KEY = 'tareas_darwin_vfinal';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
@@ -23,6 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
 const setupEventListeners = () => {
     DOM.addTaskButton.addEventListener('click', addTask);
     DOM.taskInput.addEventListener('keypress', e => e.key === 'Enter' && addTask());
+    
+    // BLOQUEO DE NÚMEROS: Solo letras en descripción y responsable
+    [DOM.taskInput, DOM.taskAssignee].forEach(input => {
+        input.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[0-9]/g, '');
+        });
+    });
+
     DOM.filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             DOM.filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -33,106 +44,99 @@ const setupEventListeners = () => {
     });
 };
 
-
 const addTask = () => {
-    const taskText = DOM.taskInput.value.trim();
+    const text = DOM.taskInput.value.trim();
+    const assignee = DOM.taskAssignee.value.trim() || "Darwin";
+    const category = DOM.taskCategory.value;
 
-    if (!taskText) {
-        alert('Por favor, ingresa una tarea');
-        DOM.taskInput.focus();
-        return;
-    }
-
-    if (taskText.length > 100) {
-        alert('La tarea no puede exceder 100 caracteres');
-        return;
-    }
+    if (!text) return alert('¡Escribe una tarea!');
 
     tasks.unshift({
         id: Date.now(),
-        text: taskText,
-        completed: false,
-        createdAt: new Date().toLocaleString()
+        text,
+        assignee,
+        category,
+        completed: false
     });
 
-    saveTasks();
-    renderTasks();
+    saveAndRender();
     DOM.taskInput.value = '';
-    DOM.taskInput.focus();
+    DOM.taskAssignee.value = '';
 };
-
-
-const toggleTaskCompletion = id => {
-    const task = tasks.find(t => t.id === id);
-    task && (task.completed = !task.completed, saveTasks(), renderTasks());
-};
-
-
-const deleteTask = id => confirm('¿Estás seguro de que deseas eliminar esta tarea?') && 
-    (tasks = tasks.filter(t => t.id !== id), saveTasks(), renderTasks());
-
 
 const renderTasks = () => {
     DOM.taskList.innerHTML = '';
 
-    const filteredTasks = currentFilter === 'completed' 
-        ? tasks.filter(t => t.completed)
-        : currentFilter === 'pending' 
-        ? tasks.filter(t => !t.completed)
-        : tasks;
+    const filtered = tasks.filter(t => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'completed') return t.completed;
+        if (currentFilter === 'pending') return !t.completed;
+        return t.category === currentFilter;
+    });
 
-    DOM.emptyState.style.display = filteredTasks.length === 0 ? 'block' : 'none';
-    
-    filteredTasks.forEach(task => {
+    DOM.emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
+
+    filtered.forEach(task => {
         const li = document.createElement('li');
         li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        const badgeClass = `badge-${task.category.toLowerCase()}`;
+
         li.innerHTML = `
-            <input type="checkbox" class="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion(${task.id})">
-            <span class="task-text">${escapeHtml(task.text)}</span>
-            <div class="task-actions">
-                <button class="delete-btn" onclick="deleteTask(${task.id})">Eliminar</button>
+            <input type="checkbox" style="width:18px; height:18px; cursor:pointer" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion(${task.id})">
+            <div style="flex:1; margin-left: 15px">
+                <div>
+                    <span class="task-text" style="font-weight:600; color:#333">${task.text}</span>
+                    <span class="category-badge ${badgeClass}">${task.category}</span>
+                </div>
+                <small style="color:#64748b">👤 ${task.assignee}</small>
             </div>
+            <button class="delete-btn" onclick="deleteTask(${task.id})">Eliminar</button>
         `;
         DOM.taskList.appendChild(li);
     });
-    
-    updateStatistics();
+    updateStats();
 };
 
-
-const updateStatistics = () => {
-    const total = tasks.length;
-    const completed = tasks.filter(t => t.completed).length;
-    DOM.totalTasksSpan.textContent = total;
-    DOM.completedTasksSpan.textContent = completed;
-    DOM.pendingTasksSpan.textContent = total - completed;
+const updateStats = () => {
+    DOM.totalTasksSpan.textContent = tasks.length;
+    DOM.completedTasksSpan.textContent = tasks.filter(t => t.completed).length;
+    DOM.workTasksSpan.textContent = tasks.filter(t => t.category === 'Trabajo').length;
+    DOM.studyTasksSpan.textContent = tasks.filter(t => t.category === 'Estudio').length;
+    DOM.freelanceTasksSpan.textContent = tasks.filter(t => t.category === 'Freelance').length;
 };
 
-
-const saveTasks = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-
-
-const loadTasks = () => {
-    try {
-        const storedTasks = localStorage.getItem(STORAGE_KEY);
-        tasks = storedTasks ? JSON.parse(storedTasks) : [];
-    } catch (error) {
-        console.error('Error al cargar tareas:', error);
-        tasks = [];
+const toggleTaskCompletion = id => {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.completed = !task.completed;
+        saveAndRender();
     }
 };
 
-
-const escapeHtml = text => {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+// FUNCIÓN ELIMINAR CORREGIDA
+const deleteTask = id => {
+    tasks = tasks.filter(t => t.id !== id);
+    saveAndRender();
 };
 
+const saveAndRender = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    renderTasks();
+};
 
-const clearCompletedTasks = () => confirm('¿Deseas eliminar todas las tareas completadas?') && 
-    (tasks = tasks.filter(t => !t.completed), saveTasks(), renderTasks());
+const loadTasks = () => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    tasks = stored ? JSON.parse(stored) : [];
+};
 
+window.clearCompletedTasks = () => {
+    tasks = tasks.filter(t => !t.completed);
+    saveAndRender();
+};
 
-const clearAllTasks = () => confirm('¿Deseas eliminar TODAS las tareas? Esta acción no se puede deshacer.') && 
-    (tasks = [], saveTasks(), renderTasks());
+window.clearAllTasks = () => {
+    if(confirm('¿Borrar todas las tareas definitivamente?')) {
+        tasks = [];
+        saveAndRender();
+    }
+};
