@@ -8,52 +8,73 @@
 </head>
 <body>
 
-    <main class="task-container">
-        <header class="header">
+    <div class="container">
+        <header>
             <h1>Mis Tareas</h1>
-            <p>Organiza tu día de forma eficiente</p>
+            <p class="subtitle">Organiza tu día de forma eficiente</p>
         </header>
 
-        <section class="input-section">
-            <input 
-                type="text" 
-                id="taskInput" 
-                placeholder="¿Qué tienes pendiente hoy?"
-                autocomplete="off"
-            >
-            <button id="addTaskButton" title="Agregar nueva tarea">+</button>
-        </section>
+        <main>
+            <section class="input-group">
+                <input type="text" id="taskInput" placeholder="¿Qué tienes pendiente? (solo texto)" autocomplete="off">
+                
+                <div class="secondary-inputs">
+                    <input type="text" id="taskAssignee" placeholder="Responsable">
+                    
+                    <select id="taskCategory">
+                        <option value="Trabajo">Trabajo</option>
+                        <option value="Estudio">Estudio</option>
+                        <option value="Freelance">Freelance</option>
+                    </select>
+                </div>
+                
+                <button id="addTaskButton">Agregar Tarea</button>
+            </section>
 
-        <section class="task-stats">
-            <div class="stat-box">
-                <strong id="totalTasks">0</strong>
-                <span>Total</span>
-            </div>
-            <div class="stat-box">
-                <strong id="completedTasks">0</strong>
-                <span>Completas</span>
-            </div>
-            <div class="stat-box">
-                <strong id="pendingTasks">0</strong>
-                <span>Pendientes</span>
-            </div>
-        </section>
+            <section class="task-stats">
+                <div class="stat-item">
+                    <span>Total</span>
+                    <strong id="totalTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Hechas</span>
+                    <strong id="completedTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Trabajo</span>
+                    <strong id="workTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Estudio</span>
+                    <strong id="studyTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Freelance</span>
+                    <strong id="freelanceTasks">0</strong>
+                </div>
+            </section>
 
-        <nav class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Todas</button>
-            <button class="filter-btn" data-filter="pending">Pendientes</button>
-            <button class="filter-btn" data-filter="completed">Completadas</button>
-        </nav>
+            <nav class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="pending">Pendientes</button>
+                <button class="filter-btn" data-filter="completed">Completadas</button>
+                <button class="filter-btn" data-filter="Trabajo">Trabajo</button>
+                <button class="filter-btn" data-filter="Estudio">Estudio</button>
+                <button class="filter-btn" data-filter="Freelance">Freelance</button>
+            </nav>
 
-        <section class="list-wrapper">
             <ul id="taskList" class="task-list"></ul>
             
             <div id="emptyState" class="empty-state">
-                <div class="icon">📝</div>
-                <p>No hay tareas pendientes. ¡Empieza creando una!</p>
+                <p>📝 No hay tareas en esta categoría.</p>
             </div>
-        </section>
-    </main>
+
+            <div class="global-actions">
+                <button onclick="clearCompletedTasks()" class="clear-btn">Limpiar Completadas</button>
+                <button onclick="clearAllTasks()" class="delete-all-btn">Borrar Todo</button>
+            </div>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
