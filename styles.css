@@ -146,6 +146,37 @@ main { padding: 25px; }
 .badge-estudio { background: #fffde7; color: #fbc02d; }
 .badge-freelance { background: #e8f5e9; color: #388e3c; }
 
-.global-actions { display: flex; gap: 10px; margin-top: 20px; }
-.clear-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #eee; cursor: pointer; font-weight: 600; }
-.delete-all-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #000; color: #fff; cursor: pointer; font-weight: 600; }
+.global-actions {
+  display: flex; 
+  gap: 10px; 
+  margin-top: 20px; }
+
+.clear-btn { 
+  flex: 1; 
+  padding: 10px; 
+  border: none; 
+  border-radius: 8px; 
+  background: #eee; 
+  cursor: pointer; 
+  font-weight: 600; 
+}
+
+.delete-all-btn {
+  flex: 1; padding: 10px; 
+  border: none; 
+  border-radius: 8px; 
+  background: #000; 
+  color: #fff; 
+  cursor: pointer; 
+  font-weight: 600; }
+
+.delete-all-btn { 
+  flex: 1; 
+  padding: 10px; 
+  border: none; 
+  border-radius: 8px; 
+  background: #000; 
+  color: #fff; 
+  cursor: pointer; 
+  font-weight: 600; }
+
