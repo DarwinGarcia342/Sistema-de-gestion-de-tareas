@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Tareas Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Mis Tareas</h1>
+            <p class="subtitle">Organiza tu día de forma eficiente</p>
+        </header>
+
+        <main>
+            <section class="input-group">
+                <input type="text" id="taskInput" placeholder="¿Qué tienes pendiente? (solo texto)" autocomplete="off">
+                
+                <div class="secondary-inputs">
+                    <input type="text" id="taskAssignee" placeholder="Responsable">
+                    
+                    <select id="taskCategory">
+                        <option value="Trabajo">Trabajo</option>
+                        <option value="Estudio">Estudio</option>
+                        <option value="Freelance">Freelance</option>
+                    </select>
+                </div>
+                
+                <button id="addTaskButton">Agregar Tarea</button>
+            </section>
+
+            <section class="task-stats">
+                <div class="stat-item">
+                    <span>Total</span>
+                    <strong id="totalTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Hechas</span>
+                    <strong id="completedTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Trabajo</span>
+                    <strong id="workTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Estudio</span>
+                    <strong id="studyTasks">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Freelance</span>
+                    <strong id="freelanceTasks">0</strong>
+                </div>
+            </section>
+
+            <nav class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="pending">Pendientes</button>
+                <button class="filter-btn" data-filter="completed">Completadas</button>
+                <button class="filter-btn" data-filter="Trabajo">Trabajo</button>
+                <button class="filter-btn" data-filter="Estudio">Estudio</button>
+                <button class="filter-btn" data-filter="Freelance">Freelance</button>
+            </nav>
+
+            <ul id="taskList" class="task-list"></ul>
+            
+            <div id="emptyState" class="empty-state">
+                <p>📝 No hay tareas en esta categoría.</p>
+            </div>
+
+            <div class="global-actions">
+                <button onclick="clearCompletedTasks()" class="clear-btn">Limpiar Completadas</button>
+                <button onclick="clearAllTasks()" class="delete-all-btn">Borrar Todo</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
-# Sistema-de-gestion-de-tareas
-Desarrollar una aplicación web moderna para gestionar tus tareas de forma sencilla y eficiente.
+# Sistema de Gestión de Tareas
+
+El sistema de gestión de tareas es una aplicación web moderna para gestionar tus tareas de forma sencilla y eficiente.
 
 ## Características
 
